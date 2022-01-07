@@ -251,7 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   height: 100
   width: 100
-  mapSeed: 1325
+  mapSeed: 1329
   zoom: 0.15
   black: {fileID: 11400000, guid: 4664123b05be3de48a259faafe990992, type: 2}
   white: {fileID: 11400000, guid: 88c16ced6f01bea4499e7bb75d1d430f, type: 2}

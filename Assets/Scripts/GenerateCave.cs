@@ -18,14 +18,20 @@ public class GenerateCave : MonoBehaviour
     public Tile redJewel;
     public Tile blueJewel;
     public Tile water;
+    [Range(0f,1f)]
     public float groundClamp;
+    [Range(0f,1f)]
     public float mossClamp;
+    [Range(0f,1f)]
     public float jewelClamp;
+    [Range(0f,1f)]
     public float waterClamp;
     public Tilemap CaveTilemap;
     public Tilemap MousseTilemap;
     public Tilemap JewelTilemap;
     public Tilemap WaterTilemap;
+
+    private bool instantiateplayer;
 
     // Update is called once per frame
     void Update()
@@ -80,5 +86,10 @@ public class GenerateCave : MonoBehaviour
                 WaterTilemap.SetTile(localisation, water);
             }
         }
+    }
+
+    void InstatiatePlayer()
+    {
+        
     }
 }
