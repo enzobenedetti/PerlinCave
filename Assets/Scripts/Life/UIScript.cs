@@ -9,6 +9,8 @@ public class UIScript : MonoBehaviour
 
     public Slider height;
     public Slider width;
+    public Slider gap;
+    public Grid grid;
     public GameLife gameScript;
     // Start is called before the first frame update
     void Start()
@@ -43,5 +45,10 @@ public class UIScript : MonoBehaviour
     {
         gameScript.width = (int) width.value;
         gameScript.SetSize();
+    }
+
+    public void ChangeGap()
+    {
+        grid.cellSize = new Vector3( 1+ gap.value, 1 + gap.value, 0);
     }
 }
