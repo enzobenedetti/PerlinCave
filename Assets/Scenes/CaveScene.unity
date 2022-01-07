@@ -249,8 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e04054404b4db24ab77309ae1ad100b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 100
-  width: 100
+  height: 50
+  width: 50
   mapSeed: 1329
   zoom: 0.15
   black: {fileID: 11400000, guid: 4664123b05be3de48a259faafe990992, type: 2}
