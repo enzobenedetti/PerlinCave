@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.Tilemaps;
 
 public class GameLife : MonoBehaviour
@@ -11,6 +12,7 @@ public class GameLife : MonoBehaviour
     public Tilemap Tilemap;
     private bool simulationOn;
 
+    [Range(0.01f, 30f)]
     public float updateSpeed;
     private float _currentTime;
 
@@ -22,12 +24,19 @@ public class GameLife : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetSize();
+    }
+
+    public void SetSize()
+    {
+        simulationOn = false;
         _gameMap = new int[width, height];
+        Tilemap.ClearAllTiles();
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Tilemap.SetTile(new Vector3Int(x, y, 0), Dead);
+                UpdateTile(_gameMap, x, y, 0);
             }
         }
     }
@@ -35,35 +44,32 @@ public class GameLife : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Vector3Int position = Tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            if (position.y < height && 
+                position.x < width &&
+                position.y >= 0 &&
+                position.x >= 0)
+                if (Tilemap.GetTile(position) == Dead)
+                {
+                    Tilemap.SetTile(position, Alive);
+                    _gameMap[position.x, position.y] = 1;
+                }
+                else
+                {
+                    Tilemap.SetTile(position, Dead);
+                    _gameMap[position.x, position.y] = 0;
+                }
+        }
         if (simulationOn)
         {
             _currentTime += Time.deltaTime;
-            if (updateSpeed <= _currentTime)
+            if ( 2 / updateSpeed <= _currentTime)
             {
                 _gameMap = UpdateLife();
 
                 _currentTime = 0f;
-            }
-        }
-        else
-        {
-            if (Input.GetButtonDown("Fire1"))
-            {
-                Vector3Int position = Tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                if (position.y < height && 
-                    position.x < width &&
-                    position.y >= 0 &&
-                    position.x >= 0)
-                    if (Tilemap.GetTile(position) == Dead)
-                    {
-                        Tilemap.SetTile(position, Alive);
-                        _gameMap[position.x, position.y] = 1;
-                    }
-                    else
-                    {
-                        Tilemap.SetTile(position, Dead);
-                        _gameMap[position.x, position.y] = 0;
-                    }
             }
         }
     }
@@ -79,18 +85,15 @@ public class GameLife : MonoBehaviour
 
                 if (count == 3)
                 {
-                    newMap[x, y] = 1;
-                    Tilemap.SetTile(new Vector3Int(x, y, 0), Alive);
+                    UpdateTile(newMap, x, y, 1);
                 }
                 else if (count == 2 && _gameMap[x, y] == 1)
                 {
-                    newMap[x, y] = 1;
-                    Tilemap.SetTile(new Vector3Int(x, y, 0), Alive);
+                    UpdateTile(newMap, x, y, 1);
                 }
                 else
                 {
-                    newMap[x, y] = 0;
-                    Tilemap.SetTile(new Vector3Int(x, y, 0), Dead);
+                    UpdateTile(newMap, x, y, 0);
                 }
             }
         }
@@ -117,8 +120,14 @@ public class GameLife : MonoBehaviour
         return count;
     }
 
+    void UpdateTile(int[,] map, int x, int y, int value)
+    {
+        map[x, y] = value;
+        Tilemap.SetTile(new Vector3Int(x, y, 0), value == 0 ? Dead : Alive);
+    }
+
     public void StartSimulation()
     {
-        simulationOn = true;
+        simulationOn = !simulationOn;
     }
 }
